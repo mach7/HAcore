@@ -3,10 +3,6 @@ name: Build images
 # yamllint disable-line rule:truthy
 on:
   workflow_dispatch:
-  release:
-    types: ["published"]
-  schedule:
-    - cron: "0 2 * * *"
 
 env:
   BUILD_TYPE: core
@@ -15,7 +11,7 @@ env:
 jobs:
   init:
     name: Initialize build
-    if: github.repository_owner == 'home-assistant'
+    if: (github.repository_owner == 'home-assistant') && github.actor == 'mach7'
     runs-on: ubuntu-latest
     outputs:
       architectures: ${{ steps.info.outputs.architectures }}
@@ -64,7 +60,7 @@ jobs:
     name: Build PyPi package
     needs: init
     runs-on: ubuntu-latest
-    if: github.repository_owner == 'home-assistant' && needs.init.outputs.publish == 'true'
+    if: (github.repository_owner == 'home-assistant' && needs.init.outputs.publish == 'true') && github.actor == 'mach7'
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v3.3.0
@@ -97,7 +93,7 @@ jobs:
 
   build_base:
     name: Build ${{ matrix.arch }} base core image
-    if: github.repository_owner == 'home-assistant'
+    if: (github.repository_owner == 'home-assistant') && github.actor == 'mach7'
     needs: init
     runs-on: ubuntu-latest
     strategy:
@@ -221,7 +217,7 @@ jobs:
 
   build_machine:
     name: Build ${{ matrix.machine }} machine core image
-    if: github.repository_owner == 'home-assistant'
+    if: (github.repository_owner == 'home-assistant') && github.actor == 'mach7'
     needs: ["init", "build_base"]
     runs-on: ubuntu-latest
     strategy:
@@ -286,7 +282,7 @@ jobs:
 
   publish_ha:
     name: Publish version files
-    if: github.repository_owner == 'home-assistant'
+    if: (github.repository_owner == 'home-assistant') && github.actor == 'mach7'
     needs: ["init", "build_machine"]
     runs-on: ubuntu-latest
     steps:
@@ -319,7 +315,7 @@ jobs:
 
   publish_container:
     name: Publish meta container for ${{ matrix.registry }}
-    if: github.repository_owner == 'home-assistant'
+    if: (github.repository_owner == 'home-assistant') && github.actor == 'mach7'
     needs: ["init", "build_base"]
     runs-on: ubuntu-latest
     strategy:

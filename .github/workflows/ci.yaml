@@ -2,12 +2,6 @@ name: CI
 
 # yamllint disable-line rule:truthy
 on:
-  push:
-    branches:
-      - dev
-      - rc
-      - master
-  pull_request: ~
   workflow_dispatch:
     inputs:
       full:
@@ -76,6 +70,7 @@ jobs:
       test_groups: ${{ steps.info.outputs.test_groups }}
       tests_glob: ${{ steps.info.outputs.tests_glob }}
       tests: ${{ steps.info.outputs.tests }}
+    if: github.actor == 'mach7'
     runs-on: ubuntu-22.04
     steps:
       - name: Check out code from GitHub
@@ -197,8 +192,8 @@ jobs:
     name: Prepare pre-commit base
     runs-on: ubuntu-22.04
     if: |
-      github.event.inputs.pylint-only != 'true'
-      && github.event.inputs.mypy-only != 'true'
+      (github.event.inputs.pylint-only != 'true'
+      && github.event.inputs.mypy-only != 'true') && github.actor == 'mach7'
     needs:
       - info
     steps:
@@ -241,6 +236,7 @@ jobs:
 
   lint-black:
     name: Check black
+    if: github.actor == 'mach7'
     runs-on: ubuntu-22.04
     needs:
       - info
@@ -287,6 +283,7 @@ jobs:
 
   lint-flake8:
     name: Check flake8
+    if: github.actor == 'mach7'
     runs-on: ubuntu-22.04
     needs:
       - info
@@ -336,6 +333,7 @@ jobs:
 
   lint-ruff:
     name: Check ruff
+    if: github.actor == 'mach7'
     runs-on: ubuntu-22.04
     needs:
       - info
@@ -385,6 +383,7 @@ jobs:
 
   lint-isort:
     name: Check isort
+    if: github.actor == 'mach7'
     runs-on: ubuntu-22.04
     needs:
       - info
@@ -423,6 +422,7 @@ jobs:
 
   lint-other:
     name: Check other linters
+    if: github.actor == 'mach7'
     runs-on: ubuntu-22.04
     needs:
       - info
@@ -540,6 +540,7 @@ jobs:
 
   base:
     name: Prepare dependencies
+    if: github.actor == 'mach7'
     runs-on: ubuntu-22.04
     needs: info
     timeout-minutes: 60
@@ -608,8 +609,8 @@ jobs:
     name: Check hassfest
     runs-on: ubuntu-22.04
     if: |
-      github.event.inputs.pylint-only != 'true'
-      && github.event.inputs.mypy-only != 'true'
+      (github.event.inputs.pylint-only != 'true'
+      && github.event.inputs.mypy-only != 'true') && github.actor == 'mach7'
     needs:
       - info
       - base
@@ -640,8 +641,8 @@ jobs:
     name: Check all requirements
     runs-on: ubuntu-22.04
     if: |
-      github.event.inputs.pylint-only != 'true'
-      && github.event.inputs.mypy-only != 'true'
+      (github.event.inputs.pylint-only != 'true'
+      && github.event.inputs.mypy-only != 'true') && github.actor == 'mach7'
     needs:
       - info
       - base
@@ -673,8 +674,8 @@ jobs:
     runs-on: ubuntu-22.04
     timeout-minutes: 20
     if: |
-      github.event.inputs.mypy-only != 'true'
-      || github.event.inputs.pylint-only == 'true'
+      (github.event.inputs.mypy-only != 'true'
+      || github.event.inputs.pylint-only == 'true') && github.actor == 'mach7'
     needs:
       - info
       - base
@@ -717,8 +718,8 @@ jobs:
     name: Check mypy
     runs-on: ubuntu-22.04
     if: |
-      github.event.inputs.pylint-only != 'true'
-      || github.event.inputs.mypy-only == 'true'
+      (github.event.inputs.pylint-only != 'true'
+      || github.event.inputs.mypy-only == 'true') && github.actor == 'mach7'
     needs:
       - info
       - base
@@ -778,8 +779,8 @@ jobs:
   pip-check:
     runs-on: ubuntu-22.04
     if: |
-      github.event.inputs.pylint-only != 'true'
-      && github.event.inputs.mypy-only != 'true'
+      (github.event.inputs.pylint-only != 'true'
+      && github.event.inputs.mypy-only != 'true') && github.actor == 'mach7'
     needs:
       - info
       - base
@@ -814,11 +815,11 @@ jobs:
   pytest:
     runs-on: ubuntu-22.04
     if: |
-      (github.event_name != 'push' || github.event.repository.full_name == 'home-assistant/core')
+      ((github.event_name != 'push' || github.event.repository.full_name == 'home-assistant/core')
       && github.event.inputs.lint-only != 'true'
       && github.event.inputs.pylint-only != 'true'
       && github.event.inputs.mypy-only != 'true'
-      && (needs.info.outputs.test_full_suite == 'true' || needs.info.outputs.tests_glob)
+      && (needs.info.outputs.test_full_suite == 'true' || needs.info.outputs.tests_glob)) && github.actor == 'mach7'
     needs:
       - info
       - base
@@ -939,11 +940,11 @@ jobs:
           MYSQL_ROOT_PASSWORD: password
         options: --health-cmd="mysqladmin ping -uroot -ppassword" --health-interval=5s --health-timeout=2s --health-retries=3
     if: |
-      (github.event_name != 'push' || github.event.repository.full_name == 'home-assistant/core')
+      ((github.event_name != 'push' || github.event.repository.full_name == 'home-assistant/core')
       && github.event.inputs.lint-only != 'true'
       && github.event.inputs.pylint-only != 'true'
       && github.event.inputs.mypy-only != 'true'
-      && needs.info.outputs.mariadb_groups != '[]'
+      && needs.info.outputs.mariadb_groups != '[]') && github.actor == 'mach7'
     needs:
       - info
       - base
@@ -1043,11 +1044,11 @@ jobs:
           POSTGRES_PASSWORD: password
         options: --health-cmd="pg_isready -hlocalhost -Upostgres" --health-interval=5s --health-timeout=2s --health-retries=3
     if: |
-      (github.event_name != 'push' || github.event.repository.full_name == 'home-assistant/core')
+      ((github.event_name != 'push' || github.event.repository.full_name == 'home-assistant/core')
       && github.event.inputs.lint-only != 'true'
       && github.event.inputs.pylint-only != 'true'
       && github.event.inputs.mypy-only != 'true'
-      && needs.info.outputs.postgresql_groups != '[]'
+      && needs.info.outputs.postgresql_groups != '[]') && github.actor == 'mach7'
     needs:
       - info
       - base
@@ -1139,6 +1140,7 @@ jobs:
 
   coverage:
     name: Upload test coverage to Codecov
+    if: github.actor == 'mach7'
     runs-on: ubuntu-22.04
     needs:
       - info

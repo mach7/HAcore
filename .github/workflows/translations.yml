@@ -3,11 +3,6 @@ name: Translations
 # yamllint disable-line rule:truthy
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - dev
-    paths:
-      - "**strings.json"
 
 env:
   DEFAULT_PYTHON: "3.10"
@@ -15,7 +10,7 @@ env:
 jobs:
   upload:
     name: Upload
-    if: github.repository_owner == 'home-assistant'
+    if: (github.repository_owner == 'home-assistant') && github.actor == 'mach7'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the repository

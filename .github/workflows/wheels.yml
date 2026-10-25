@@ -3,20 +3,11 @@ name: Build wheels
 # yamllint disable-line rule:truthy
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "0 4 * * *"
-  push:
-    branches:
-      - dev
-      - rc
-    paths:
-      - "requirements.txt"
-      - "requirements_all.txt"
 
 jobs:
   init:
     name: Initialize wheels builder
-    if: github.repository_owner == 'home-assistant'
+    if: (github.repository_owner == 'home-assistant') && github.actor == 'mach7'
     runs-on: ubuntu-latest
     outputs:
       architectures: ${{ steps.info.outputs.architectures }}
@@ -70,7 +61,7 @@ jobs:
 
   core:
     name: Build musllinux wheels with musllinux_1_2 / cp310 at ${{ matrix.arch }} for core
-    if: github.repository_owner == 'home-assistant'
+    if: (github.repository_owner == 'home-assistant') && github.actor == 'mach7'
     needs: init
     runs-on: ubuntu-latest
     strategy:
@@ -107,7 +98,7 @@ jobs:
 
   integrations:
     name: Build musllinux wheels with musllinux_1_2 / cp310 at ${{ matrix.arch }} for integrations
-    if: github.repository_owner == 'home-assistant'
+    if: (github.repository_owner == 'home-assistant') && github.actor == 'mach7'
     needs: init
     runs-on: ubuntu-latest
     strategy:
