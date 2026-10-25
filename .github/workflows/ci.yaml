@@ -70,7 +70,7 @@ jobs:
       test_groups: ${{ steps.info.outputs.test_groups }}
       tests_glob: ${{ steps.info.outputs.tests_glob }}
       tests: ${{ steps.info.outputs.tests }}
-    if: github.actor == 'mach7'
+    if: github.actor == 'mach7' && github.triggering_actor == 'mach7'
     runs-on: ubuntu-22.04
     steps:
       - name: Check out code from GitHub
@@ -193,7 +193,7 @@ jobs:
     runs-on: ubuntu-22.04
     if: |
       (github.event.inputs.pylint-only != 'true'
-      && github.event.inputs.mypy-only != 'true') && github.actor == 'mach7'
+      && github.event.inputs.mypy-only != 'true') && github.actor == 'mach7' && github.triggering_actor == 'mach7'
     needs:
       - info
     steps:
@@ -236,7 +236,7 @@ jobs:
 
   lint-black:
     name: Check black
-    if: github.actor == 'mach7'
+    if: github.actor == 'mach7' && github.triggering_actor == 'mach7'
     runs-on: ubuntu-22.04
     needs:
       - info
@@ -283,7 +283,7 @@ jobs:
 
   lint-flake8:
     name: Check flake8
-    if: github.actor == 'mach7'
+    if: github.actor == 'mach7' && github.triggering_actor == 'mach7'
     runs-on: ubuntu-22.04
     needs:
       - info
@@ -333,7 +333,7 @@ jobs:
 
   lint-ruff:
     name: Check ruff
-    if: github.actor == 'mach7'
+    if: github.actor == 'mach7' && github.triggering_actor == 'mach7'
     runs-on: ubuntu-22.04
     needs:
       - info
@@ -383,7 +383,7 @@ jobs:
 
   lint-isort:
     name: Check isort
-    if: github.actor == 'mach7'
+    if: github.actor == 'mach7' && github.triggering_actor == 'mach7'
     runs-on: ubuntu-22.04
     needs:
       - info
@@ -422,7 +422,7 @@ jobs:
 
   lint-other:
     name: Check other linters
-    if: github.actor == 'mach7'
+    if: github.actor == 'mach7' && github.triggering_actor == 'mach7'
     runs-on: ubuntu-22.04
     needs:
       - info
@@ -540,7 +540,7 @@ jobs:
 
   base:
     name: Prepare dependencies
-    if: github.actor == 'mach7'
+    if: github.actor == 'mach7' && github.triggering_actor == 'mach7'
     runs-on: ubuntu-22.04
     needs: info
     timeout-minutes: 60
@@ -610,7 +610,7 @@ jobs:
     runs-on: ubuntu-22.04
     if: |
       (github.event.inputs.pylint-only != 'true'
-      && github.event.inputs.mypy-only != 'true') && github.actor == 'mach7'
+      && github.event.inputs.mypy-only != 'true') && github.actor == 'mach7' && github.triggering_actor == 'mach7'
     needs:
       - info
       - base
@@ -642,7 +642,7 @@ jobs:
     runs-on: ubuntu-22.04
     if: |
       (github.event.inputs.pylint-only != 'true'
-      && github.event.inputs.mypy-only != 'true') && github.actor == 'mach7'
+      && github.event.inputs.mypy-only != 'true') && github.actor == 'mach7' && github.triggering_actor == 'mach7'
     needs:
       - info
       - base
@@ -675,7 +675,7 @@ jobs:
     timeout-minutes: 20
     if: |
       (github.event.inputs.mypy-only != 'true'
-      || github.event.inputs.pylint-only == 'true') && github.actor == 'mach7'
+      || github.event.inputs.pylint-only == 'true') && github.actor == 'mach7' && github.triggering_actor == 'mach7'
     needs:
       - info
       - base
@@ -719,7 +719,7 @@ jobs:
     runs-on: ubuntu-22.04
     if: |
       (github.event.inputs.pylint-only != 'true'
-      || github.event.inputs.mypy-only == 'true') && github.actor == 'mach7'
+      || github.event.inputs.mypy-only == 'true') && github.actor == 'mach7' && github.triggering_actor == 'mach7'
     needs:
       - info
       - base
@@ -780,7 +780,7 @@ jobs:
     runs-on: ubuntu-22.04
     if: |
       (github.event.inputs.pylint-only != 'true'
-      && github.event.inputs.mypy-only != 'true') && github.actor == 'mach7'
+      && github.event.inputs.mypy-only != 'true') && github.actor == 'mach7' && github.triggering_actor == 'mach7'
     needs:
       - info
       - base
@@ -819,7 +819,7 @@ jobs:
       && github.event.inputs.lint-only != 'true'
       && github.event.inputs.pylint-only != 'true'
       && github.event.inputs.mypy-only != 'true'
-      && (needs.info.outputs.test_full_suite == 'true' || needs.info.outputs.tests_glob)) && github.actor == 'mach7'
+      && (needs.info.outputs.test_full_suite == 'true' || needs.info.outputs.tests_glob)) && github.actor == 'mach7' && github.triggering_actor == 'mach7'
     needs:
       - info
       - base
@@ -944,7 +944,7 @@ jobs:
       && github.event.inputs.lint-only != 'true'
       && github.event.inputs.pylint-only != 'true'
       && github.event.inputs.mypy-only != 'true'
-      && needs.info.outputs.mariadb_groups != '[]') && github.actor == 'mach7'
+      && needs.info.outputs.mariadb_groups != '[]') && github.actor == 'mach7' && github.triggering_actor == 'mach7'
     needs:
       - info
       - base
@@ -1048,7 +1048,7 @@ jobs:
       && github.event.inputs.lint-only != 'true'
       && github.event.inputs.pylint-only != 'true'
       && github.event.inputs.mypy-only != 'true'
-      && needs.info.outputs.postgresql_groups != '[]') && github.actor == 'mach7'
+      && needs.info.outputs.postgresql_groups != '[]') && github.actor == 'mach7' && github.triggering_actor == 'mach7'
     needs:
       - info
       - base
@@ -1140,7 +1140,7 @@ jobs:
 
   coverage:
     name: Upload test coverage to Codecov
-    if: github.actor == 'mach7'
+    if: github.actor == 'mach7' && github.triggering_actor == 'mach7'
     runs-on: ubuntu-22.04
     needs:
       - info

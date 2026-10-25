@@ -6,7 +6,7 @@ on:
 
 jobs:
   lock:
-    if: (github.repository_owner == 'home-assistant') && github.actor == 'mach7'
+    if: (github.repository_owner == 'home-assistant') && github.actor == 'mach7' && github.triggering_actor == 'mach7'
     runs-on: ubuntu-latest
     steps:
       - uses: dessant/lock-threads@v4.0.0
